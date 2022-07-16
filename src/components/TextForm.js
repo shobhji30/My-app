@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
 
-export default function TextForm() {
+export default function TextForm(props) {
 
     const handleOnChange=(event)=>{
         // console.log("onchange fired")
         setText(event.target.value)
     }
 
-    const handleUpClick=()=>{
+    const handleUpClick=(event)=>{
         // console.log("onclick fired")
         let newText=text.toUpperCase();
         setText(newText)
+        event.preventDefault()
     }
 
     function extractEmails(text)
@@ -21,15 +22,25 @@ export default function TextForm() {
     const handleEmailExtract=(event)=>{
         // console.log("onclick fired")
         let newemail=extractEmails(text);
-        setEmail(newemail)
-        event.preventDefault()
+        if(newemail.length===0)
+        {
+            setEmail('No E-mail found!')
+            event.preventDefault()
+        }
+        else{
+            setEmail(newemail)
+            event.preventDefault()
+        }
+        
+        
     }
 
 
-    const handleLowClick=()=>{
+    const handleLowClick=(event)=>{
         // console.log("onclick fired")
         let newText=text.toLowerCase();
         setText(newText)
+        event.preventDefault()
     }
 
     const [text,setText]=useState("Enter text here")
@@ -37,11 +48,11 @@ export default function TextForm() {
 
   return (
     <>
-    <div className='container'>
+    <div className='container' style={{color: props.mode==='dark'?'white':'grey'}}>
         <h1>Enter your text below to analyze</h1>
         <form>
             <div className="mb-3 ">
-                <textarea className="form-control" value={text} onChange={handleOnChange} id="exampleFormControlTextarea1" rows="8"></textarea>
+                <textarea className="form-control" value={text} onChange={handleOnChange} style={{backgroundColor: props.mode==='light'?'white':'grey',color: props.mode==='dark'?'white':'grey'}} id="exampleFormControlTextarea1" rows="8"></textarea>
                 <button className="btn btn-primary my-2 mx-1" onClick={handleUpClick}>Convert to Uppercase</button>
                 <button className="btn btn-primary my-2 mx-1" onClick={handleLowClick}>Convert to Lowercase</button>
                 <button className="btn btn-primary my-2 mx-1" onClick={handleEmailExtract}>Extract emails</button>
@@ -50,7 +61,7 @@ export default function TextForm() {
         </form>
       
     </div>
-    <div className='container my-3'>
+    <div className='container my-3' style={{color: props.mode==='dark'?'white':'grey'}}>
         <h1>Your text summary</h1>
         <p>{text.split(" ").length} words and {text.length} characters</p>
         <h3>E-mails:-</h3>
